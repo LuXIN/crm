@@ -162,9 +162,20 @@ class Address
         return $this->zipcode;
     }
 
+    /**
+     * @return Contact
+     */
     public function getContact()
     {
         return $this->contact;
+    }
+
+    /**
+     * @param Contact $contact
+     */
+    public function setContact(Contact $contact)
+    {
+        $this->contact = $contact;
     }
 }
 

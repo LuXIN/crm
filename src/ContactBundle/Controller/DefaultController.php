@@ -18,14 +18,12 @@ class DefaultController extends Controller
     /**
      * @Route("/", name="contact_list")
      */
-    public function indexAction()
+    public function listAction()
     {
         /* @var User $user */
         $user = $this->getUser();
-
         $contacts = $user->getContacts();
-
-        return $this->render('ContactBundle:Default:index.html.twig', ['contacts' => $contacts]);
+        return $this->render('ContactBundle:Default:contact_list.html.twig', ['contacts' => $contacts]);
     }
 
     /**
@@ -34,7 +32,6 @@ class DefaultController extends Controller
      */
     public function editAction(Contact $contact, Request $request)
     {
-
         $form = $this->createForm(ContactType::class, $contact);
         $addresses = $contact->getAddresses();
         $form->handleRequest($request);
@@ -47,7 +44,7 @@ class DefaultController extends Controller
 
             return $this->redirectToRoute('contact_list');
         }
-        return $this->render('ContactBundle:Default:edit.html.twig', ['form' => $form->createView(), 'addresses' => $addresses]);
+        return $this->render('ContactBundle:Default:contact_edit.html.twig', ['form' => $form->createView(), 'contact' => $contact, 'addresses' => $addresses]);
     }
 
     /**
@@ -59,6 +56,7 @@ class DefaultController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $contact = $form->getData();
+            $contact->setUser($this->getUser());
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($contact);
@@ -66,7 +64,7 @@ class DefaultController extends Controller
 
             return $this->redirectToRoute('contact_list');
         }
-        return $this->render('ContactBundle:Default:add.html.twig', ['form' => $form->createView()]);
+        return $this->render('ContactBundle:Default:contact_add.html.twig', ['form' => $form->createView()]);
     }
 
     /**
@@ -79,13 +77,32 @@ class DefaultController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $address = $form->getData();
-
             $em = $this->getDoctrine()->getManager();
             $em->persist($address);
             $em->flush();
 
             return $this->redirectToRoute('contact_edit', ['id' => $address->getContact()->getId()]);
         }
-        return $this->render('ContactBundle:Default:adr.html.twig', ['form' => $form->createView()]);
+        return $this->render('ContactBundle:Default:addr_edit.html.twig', ['form' => $form->createView()]);
+    }
+
+    /**
+     * @Route("/addressAdd/{id}", name = "address_add", requirements={"id": "\d+"})
+     * @ParamConverter("contact", class="ContactBundle:Contact")
+     */
+    public function addAddressAction(Contact $contact, Request $request)
+    {
+        $form = $this->createForm(AddressType::class);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $address = $form->getData();
+            $address->setContact($contact);
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($address);
+            $em->flush();
+
+            return $this->redirectToRoute('contact_edit', ['id' => $contact->getId()]);
+        }
+        return $this->render('ContactBundle:Default:addr_add.html.twig', ['form' => $form->createView()]);
     }
 }

@@ -1,0 +1,27 @@
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="{{ path('contact_list') }}">CRM</a>
+        </div>
+        <ul class="nav navbar-nav">
+            <li class="active"><a href="{{ path('contact_list') }}">Liste de contacts</a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+            <li><a href="{{ path('fos_user_registration_register') }}"><span class="glyphicon glyphicon-user"></span>Sign
+                    Up</a></li>
+            <li>
+                {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+
+                    <a href="{{ path('fos_user_security_logout') }}">
+                        <span class="glyphicon glyphicon-log-in"></span> {{ 'layout.logout'|trans({}, 'FOSUserBundle') }}
+                        ({{ app.user.username }})
+                    </a>
+                {% else %}
+                    <a href="{{ path('fos_user_security_login') }}"><span
+                                class="glyphicon glyphicon-log-in"></span> {{ 'layout.login'|trans({}, 'FOSUserBundle') }}
+                    </a>
+                {% endif %}
+            </li>
+        </ul>
+    </div>
+</nav>
