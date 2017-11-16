@@ -51,8 +51,8 @@ class Address
 
 
     /**
-     * @ORM\ManyToOne(targetEntity="Contact", inversedBy="addresses")
-     * @ORM\JoinColumn(name="contact_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Contact", inversedBy="addresses", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(name="contact_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $contact;
 

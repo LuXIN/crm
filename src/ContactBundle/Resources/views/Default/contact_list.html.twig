@@ -1,5 +1,6 @@
 {% extends "layout.html.twig" %}
 {% block content %}
+    {{ parent() }}
     <h1>Ajouter un contact</h1>
     <div><a href="{{ path('contact_add') }}">Ajouter</a></div>
     {% if contacts|length > 0 %}
@@ -12,6 +13,7 @@
                 <th>Lastname</th>
                 <th>Email</th>
                 <th>Action</th>
+                <th>Delete</th>
             </tr>
             </thead>
             <tbody>
@@ -21,9 +23,38 @@
                     <td>{{ contact.lastName|e }}</td>
                     <td>{{ contact.email|e }}</td>
                     <td><a href="{{ path('contact_edit', {'id': contact.id}) }}">modifier</a></td>
+                    <td><a data-href="{{ path('contact_delete', {'id': contact.id}) }}" data-toggle="modal" data-target="#confirm-delete" href="#">supprimer</a>
+                    </td>
                 </tr>
             {% endfor %}
             </tbody>
         </table>
     {% endif %}
+
+    <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    Supprimer un contact
+                </div>
+                <div class="modal-body">
+                    Etes-vous sur de vouloir supprimer ce contact et toutes les adresses ?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-danger btn-ok">Delete</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 {% endblock content %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% javascripts '@ContactBundle/Resources/public/js/*' %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}

@@ -66,7 +66,25 @@ class DefaultController extends Controller
         }
         return $this->render('ContactBundle:Default:contact_add.html.twig', ['form' => $form->createView()]);
     }
+ 
+    /**
+     * @Route("/delete/{id}", name="contact_delete", requirements={"id": "\d+"})
+     * @ParamConverter("contact", class="ContactBundle:Contact")
+     */
+    public function deleteAction(Contact $contact) 
+    {
+        /*
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($contact);
+        $em->flush();
+        */
+        $this->addFlash(
+            'notice',
+            'Le contact a bien été supprimé!'
+        );
 
+        return $this->redirectToRoute('contact_list');
+    }
     /**
      * @Route("/addressEdit/{id}", name = "address_edit", requirements={"id": "\d+"})
      * @ParamConverter("address", class="ContactBundle:Address")

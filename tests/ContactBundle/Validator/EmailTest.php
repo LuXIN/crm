@@ -8,8 +8,25 @@
 
 namespace Tests\ContactBundle\Validator;
 
+use PHPUnit\Framework\TestCase;
+use \ContactBundle\Validator\Email;
 
-class EmailTest
+class EmailTest extends TestCase
 {
 
+    public function dataProvider() {
+        return [
+          ['email@email.com', true],
+          ['email@email.com', true],
+          ['email@email.com', true],
+          ['email@email.com', true],
+        ];
+    }
+
+    /**
+     * @dataProvider dataProvider
+     */
+    public function testIsValid($email, $expected) {
+        $this->assertEquals($expected, Email::isValid($email));
+    }
 }
